@@ -1,13 +1,13 @@
-import { Yuui } from "./Yuui";
+import { Kore } from "./Kore";
 import { Command } from "./command";
 import Listener  from "./listener";
 import glob from 'glob';
 import { AnyInteractionGateway, Constants } from "oceanic.js";
 
 export class Handler {
-    protected client: Yuui;
+    protected client: Kore;
 
-    constructor(client: Yuui) {
+    constructor(client: Kore) {
         this.client = client;
 
         this.loadCommands().then(() => this.client.logger.info(`Loaded ${this.client.commands.size} commands.`)).catch((err) => console.log(err));

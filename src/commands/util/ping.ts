@@ -1,9 +1,9 @@
-import { Yuui } from "structs/Yuui";
+import { Kore } from "structs/Kore";
 import { Command } from "../../structs/command";
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCommandTypes } from "oceanic.js";
 
 export default class PingCommand extends Command {
-    constructor(client: Yuui) {
+    constructor(client: Kore) {
         super(client, {
             name: "ping",
             description: "Get the bot's latency",

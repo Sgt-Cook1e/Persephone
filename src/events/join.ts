@@ -1,28 +1,62 @@
 import Listener  from "../structs/listener";
+import Database from "../structs/database";
+import { DGuild } from "../entity/guild";
 
 export default new Listener("guildMemberAdd", false, async function(member) {
-      await(member);
-      
-      if(member){
+    const manager = await Database.getInstance().getManager()
+    
+    if(member.guild.id){
+        if(await manager.findOne(DGuild, {
+            where: {
+                GuildID: member.guild.id
+            }
+        }) === null) {
+            manager.save(DGuild, { 
+                GuildID: member.guild.id
+            });
+        } else {
+            var weldb = await manager.findOne(DGuild, {
+                where: {
+                    GuildID: member.guild.id
+                }
+            });
+            
+            if(weldb === null) return;
 
-         this.rest.channels.createMessage('1099023818011443311', {
-            content: `Lets give a warm welcome to our newest member ${member.mention}, Please Make Sure To Read Our <#1099021303920476260>, and make sure to <#1099023027825549313>`,
-            embeds: [
-               {
-                  author: {
-                     name: member.username,
-                     iconURL: member.avatarURL("jpg")
-                  },
+            if(weldb.wchannel){
+                if(weldb.wmessage){
+                    if(weldb.wimg){
+                        this.rest.channels.createMessage(weldb.wchannel, {
+                            content: member.mention,
+                            embeds: [
+                                {
+                                    author: {
+                                        name: member.username,
+                                        iconURL: member.avatarURL('jpeg')
+                                    },
 
-                  image: {
-                     url: 'https://i.imgur.com/jvUiGhv.png'
-                  },
+                                    fields: [
+                                        {
+                                            name: weldb.wmessage,
+                                            value: ''
+                                        }
+                                    ],
 
-                  footer: {
-                     text: 'Created With Love By Mythic'
-                  }
-               }
-            ],
-         });
-      }
+                                    image: {
+                                        url: weldb.wimg
+                                    },
+
+                                    footer: {
+                                        text: 'Created With Love By Mythic'
+                                    }
+                                }
+                            ]
+                        });
+
+                    }
+                }
+            }
+
+        }
+    }
 });

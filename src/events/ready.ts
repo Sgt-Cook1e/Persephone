@@ -6,7 +6,14 @@ export default new Listener("ready", false, async function() {
     this.firstReady = true;
     this.logger.info(`Launched as ${this.user.username}`);
 
-    this.editStatus('idle', [{name: `God Of ${this.guilds.get(`1083797008608940244`)?.memberCount} Members`, type: Constants.ActivityTypes.GAME}]);
+    this.editStatus('idle', [{name: `Protecting ${this.rest.client.guilds.size} Guild`, type: Constants.ActivityTypes.GAME}]);
+
+        // const commands = this.application.getGlobalCommands();
+
+        // for (const command of await commands) {
+        //     await command.delete();
+        //     this.logger.debug(`Cleared last set of Global Commands`);
+        // }
 
         this.commands.forEach((command) => {
         if (command.options.slash) {

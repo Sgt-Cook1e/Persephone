@@ -1,12 +1,12 @@
 import { ApplicationCommandOptions, CommandInteraction, Constants, Message, ApplicationCommandTypes } from "oceanic.js";
-import { Yuui } from "./Yuui";
+import { Kore } from "./Kore";
 
 interface SlashOptions {
     enabled: boolean | false;
     type: ApplicationCommandTypes;
     options?: ApplicationCommandOptions[];
     defaultPermission?:  boolean | false;
-    precondition?: (client: Yuui, interaction : CommandInteraction) => boolean;
+    precondition?: (client: Kore, interaction : CommandInteraction) => boolean;
 }
 
 export interface CommandOptions {

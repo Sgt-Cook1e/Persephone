@@ -6,7 +6,7 @@ import { Command } from './command';
 import { Config } from './types';
 import { Handler } from './handler';
 
-export class Yuui extends Client {
+export class Kore extends Client {
     public logger: Logger;
     public handler: Handler;
     public commands: Collection<string, Command>;

@@ -1,12 +1,12 @@
 import { ApplicationCommandOptions, CommandInteraction, Constants, Message } from "oceanic.js";
 import { CommandOptions } from "./types";
-import { Yuui } from "./Yuui";
+import { Kore } from "./Kore";
 
 export abstract class Command {
-    protected client: Yuui;
+    protected client: Kore;
     public options: CommandOptions;
 
-    constructor(client: Yuui, options: CommandOptions) {
+    constructor(client: Kore, options: CommandOptions) {
         this.client = client;
         this.options = options;
     }

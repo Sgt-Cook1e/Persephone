@@ -1,13 +1,13 @@
-import { Yuui } from "structs/Yuui";
+import { Kore } from "structs/Kore";
 import { Command } from "../../structs/command";
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCommandTypes } from "oceanic.js";
 
 export default class PingCommand extends Command {
-    constructor(client: Yuui) {
+    constructor(client: Kore) {
         super(client, {
-            name: "ping",
-            description: "Get the bot's latency",
-            group: "util",
+            name: "setup",
+            description: "setup Kore",
+            group: "admin",
             slash: {
                 enabled: true,
                 type: ApplicationCommandTypes.CHAT_INPUT
@@ -16,8 +16,6 @@ export default class PingCommand extends Command {
     }
 
     public async interactionRun(interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>): Promise<void> {
-        await interaction.createMessage({
-            content: "Pong. " + interaction.guild?.shard.latency + "ms",
-        });
+        
     }
 }
