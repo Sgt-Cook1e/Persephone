@@ -4,7 +4,7 @@ import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCo
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 
-export default class PingCommand extends Command {
+export default class WelcomeCommand extends Command {
     constructor(client: Kore) {
         super(client, {
             name: "wsetup",
@@ -51,20 +51,20 @@ export default class PingCommand extends Command {
                     GuildID: interaction.guild.id
                 });
             } else {
-                var weldb = await manager.findOne(DGuild, {
+                var guilddb = await manager.findOne(DGuild, {
                     where: {
                         GuildID: interaction.guild.id
                     }
                 });
 
-                if(weldb === null) return;
+                if(guilddb === null) return;
 
                 if(wchannel){
                     if(wmessage){
                         if(wimg){
-                            weldb.wchannel = weldb.wchannel + wchannel.id;
-                            weldb.wimg = weldb.wimg + wimg;
-                            weldb.wmessage = weldb.wmessage + wmessage;
+                            guilddb.wchannel = wchannel.id;
+                            guilddb.wimg = wimg;
+                            guilddb.wmessage = wmessage;
 
                             interaction.createMessage({
                                 embeds: [
@@ -76,7 +76,7 @@ export default class PingCommand extends Command {
                                         fields: [
                                             {
                                                 name: `Welcome channel set to`,
-                                                value: `${wchannel.id}`
+                                                value: `${wchannel}`
                                             },
                                             {
                                                 name: `Welcome Message set to`,
@@ -95,7 +95,7 @@ export default class PingCommand extends Command {
                                 ]
                             });
 
-                            manager.save(DGuild, weldb)
+                            manager.save(DGuild, guilddb)
                         }
                     }
                 }

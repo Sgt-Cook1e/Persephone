@@ -21,41 +21,41 @@ export default new Listener("guildCreate", false, async function(guild) {
             guild.channels.find((channel) => {
                 if(found === 0){
                     if(channel.type === ChannelTypes.GUILD_TEXT){
-                        if(channel.permissionsOf(this.user.id).has("VIEW_CHANNEL") === true) {
-                            if(channel.permissionsOf(this.user.id).has("SEND_MESSAGES") === true) {
-                                this.rest.channels.createMessage(channel.id, {
-                                    embeds: [
+                        this.rest.channels.createMessage(channel.id, {
+                            content: `Thank You for Inviting Me!`,
+                            embeds: [
+                                {
+                                    title: `Kore`,
+
+                                    author: {
+                                        name: this.rest.client.user.username,
+                                        iconURL: this.rest.client.user.avatarURL('jpeg'),
+                                    },
+
+                                    fields: [
                                         {
-                                            title: 'Setup Kore',
-
-                                            author: {
-                                                name: this.rest.client.user.username,
-                                                iconURL: this.rest.client.user.avatarURL('jpeg'),
-                                                url: 'https://mythicxgn.com'
-                                            },
-
-                                            fields: [
-                                                {
-                                                    name: 'Hello!, Im Kore',
-                                                    value: 'My goal. To Make Vrchat & Discord Clubs a better and safer place. run /setup to start!'
-                                                },
-
-                                                {
-                                                    name: 'Rember I am an application command bot. all my commands are / commands I dont have a prefix',
-                                                    value: ''
-                                                }
-                                            ],
-
-                                            footer: {
-                                                text: 'Created With Love By Mythic'
-                                            }
+                                            name: `Setup Welcomer`,
+                                            value: `/wsetup`,
+                                        },
+                                        {
+                                            name: `Global Report System (Beta)`,
+                                            value: `/sreport`,
+                                        },
+                                        {
+                                            name: `Support`,
+                                            value: `https://mythicxgn.com`,
                                         }
-                                    ]
-                                });
+                                    ],
 
-                                found = 1;
-                            }
-                        }
+                                    
+                                    footer: {
+                                        text: 'Created With Love By Mythic'
+                                    }
+                                }
+                            ]
+                        });
+
+                        found = 1;
                     }
                 }
             });

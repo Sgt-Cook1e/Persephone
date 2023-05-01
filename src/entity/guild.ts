@@ -18,4 +18,7 @@ export class DGuild {
     @Column()
     wimg: string
 
+    @Column()
+    rchannel: string
+
 }

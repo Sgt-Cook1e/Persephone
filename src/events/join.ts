@@ -15,19 +15,19 @@ export default new Listener("guildMemberAdd", false, async function(member) {
                 GuildID: member.guild.id
             });
         } else {
-            var weldb = await manager.findOne(DGuild, {
+            var guilddb = await manager.findOne(DGuild, {
                 where: {
                     GuildID: member.guild.id
                 }
             });
             
-            if(weldb === null) return;
+            if(guilddb === null) return;
 
-            if(weldb.wchannel){
-                if(weldb.wmessage){
-                    if(weldb.wimg){
-                        this.rest.channels.createMessage(weldb.wchannel, {
-                            content: member.mention,
+            if(guilddb.wchannel){
+                if(guilddb.wmessage){
+                    if(guilddb.wimg){
+                        this.rest.channels.createMessage(guilddb.wchannel, {
+                            content: `${member.mention}, ${guilddb.wmessage}`,
                             embeds: [
                                 {
                                     author: {
@@ -35,15 +35,8 @@ export default new Listener("guildMemberAdd", false, async function(member) {
                                         iconURL: member.avatarURL('jpeg')
                                     },
 
-                                    fields: [
-                                        {
-                                            name: weldb.wmessage,
-                                            value: ''
-                                        }
-                                    ],
-
                                     image: {
-                                        url: weldb.wimg
+                                        url: guilddb.wimg
                                     },
 
                                     footer: {
