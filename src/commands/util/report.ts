@@ -17,22 +17,26 @@ export default class WelcomeCommand extends Command {
                     {
                         name: "user-id",
                         description: "id of the user to report",
-                        type: ApplicationCommandOptionTypes.STRING
+                        type: ApplicationCommandOptionTypes.STRING,
+                        required: true
                     },
                     {
                         name: "username",
                         description: "username of the reported user",
-                        type: ApplicationCommandOptionTypes.STRING
+                        type: ApplicationCommandOptionTypes.STRING,
+                        required: true
                     },
                     {
                         name: "reason",
                         description: "reason to report user",
-                        type: ApplicationCommandOptionTypes.STRING
+                        type: ApplicationCommandOptionTypes.STRING,
+                        required: true
                     },
                     {
                         name: "proof",
                         description: "proof of what the user did (link to image)",
-                        type: ApplicationCommandOptionTypes.STRING
+                        type: ApplicationCommandOptionTypes.STRING,
+                        required: true
                     }
                 ]
             }
