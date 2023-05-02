@@ -4,11 +4,11 @@ import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCo
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 
-export default class SreportCommand extends Command {
+export default class SchatCommand extends Command {
     constructor(client: Kore) {
         super(client, {
-            name: "sreport",
-            description: "setup report system",
+            name: "schat",
+            description: "sets the gpt chat system",
             group: "setup",
             slash: {
                 enabled: true,
@@ -16,7 +16,7 @@ export default class SreportCommand extends Command {
                 options: [
                     {
                         name: "channel",
-                        description: "sets the welcome channel",
+                        description: "sets the gpt channel",
                         type: ApplicationCommandOptionTypes.CHANNEL
                     }
                 ]
@@ -27,7 +27,7 @@ export default class SreportCommand extends Command {
     public async interactionRun(interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>): Promise<void> {
         const manager = await Database.getInstance().getManager()
 
-        const rchannel = interaction.data.options.getChannel("channel");
+        const gptChannel = interaction.data.options.getChannel("channel");
 
         if(interaction.guild?.id){
             if(await manager.findOne(DGuild, {
@@ -47,8 +47,8 @@ export default class SreportCommand extends Command {
 
                 if(guilddb === null) return;
 
-                if(rchannel){
-                    guilddb.rchannel = rchannel.id;
+                if(gptChannel){
+                    guilddb.gptChannel = gptChannel.id;
 
                     interaction.createMessage({
                         embeds: [
@@ -60,7 +60,7 @@ export default class SreportCommand extends Command {
                                 fields: [
                                     {
                                         name: 'Set Reports Channel to',
-                                        value: `<#${rchannel.id}>`
+                                        value: `<#${gptChannel.id}>`
                                     }
                                 ]
                             }

@@ -21,4 +21,7 @@ export class DGuild {
     @Column()
     rchannel: string
 
+    @Column()
+    gptChannel: string
+
 }

@@ -1,11 +1,10 @@
-import { execSync } from "child_process";
 import { AnyTextChannelWithoutGroup, ApplicationCommandOptionTypes, ApplicationCommandTypes, CommandInteraction, Uncached,  } from "oceanic.js";
 import { Command } from "../../structs/command";
 import { Kore } from "structs/Kore";
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 
-export default class UpdateCommand extends Command {
+export default class DataToolCommand extends Command {
     constructor(client: Kore) {
         super(client, {
             name: "datatool",

@@ -4,7 +4,7 @@ import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCo
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 
-export default class WelcomeCommand extends Command {
+export default class ReportCommand extends Command {
     constructor(client: Kore) {
         super(client, {
             name: "report",
