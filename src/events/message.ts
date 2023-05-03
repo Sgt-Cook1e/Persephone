@@ -1,31 +1,12 @@
 import { AnyTextChannelWithoutGroup, Message, Uncached } from "oceanic.js";
+import fetch from "node-fetch";
 import { DGuild } from "../entity/guild";
 import Listener  from "../structs/listener";
 import Database from "../structs/database";
 
-import { LLM } from "llama-node";
+import { OpenAIApi, Configuration } from "openai";
 
-import { LLamaCpp } from "llama-node/dist/llm/llama-cpp.js";
-import path from "path";
-
-const model = path.resolve(process.cwd(), "../ggml-vicuna-7b-1.1-q4_1.bin");
-const llama = new LLM(LLamaCpp);
-
-const config = {
-    path: model,
-    enableLogging: true,
-    nCtx: 1024,
-    nParts: -1,
-    seed: 0,
-    f16Kv: false,
-    logitsAll: false,
-    vocabOnly: false,
-    useMlock: false,
-    embedding: false,
-    useMmap: true,
-};
-
-llama.load(config);
+export const openai = new OpenAIApi(new Configuration({ apiKey: process.env.CHATGPT }));
 
 export default new Listener("messageCreate", false, async function(msg: Message<Uncached | AnyTextChannelWithoutGroup>) {
     if (msg.author.bot) return;
@@ -56,25 +37,28 @@ export default new Listener("messageCreate", false, async function(msg: Message<
             });
 
             if(guilddb === null) return;
-
+            
             if(msg.channelID === guilddb.gptChannel){
-                const template = msg.content;
-                const prompt = `A chat between a user and an assistant.
-                USER: ${template}
-                ASSISTANT:`;
-
-                llama.createCompletion({
-                    nThreads: 4,
-                    nTokPredict: 2048,
-                    topK: 40,
-                    topP: 0.1,
-                    temp: 0.2,
-                    repeatPenalty: 1,
-                    prompt,
-                }, (response) => {
-                    process.stdout.write(response.token);
+                const completion = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: `${msg.content}`,
+                    temperature: 0,
+                    top_p: 1,
+                    frequency_penalty: 0.0,
+                    presence_penalty: 0.0
                 });
-                
+
+                let res = await completion.data.choices[0].text
+
+                if(res){
+                    this.rest.channels.createMessage(guilddb.gptChannel, {
+                        content: res
+                    });
+                } else {
+                    this.rest.channels.createMessage(guilddb.gptChannel, {
+                        content: `ChatGPT Api Broke. Pleas try Again Later.`
+                    });
+                }
             } else {
                 return;
             }

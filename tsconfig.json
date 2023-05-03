@@ -17,13 +17,14 @@
 		"experimentalDecorators": true,
 		"types": [
 			"node"
-		]
+		],
 	},
 	"include": [
-		"**/*"
+		"**/*",
 	],
 	"exclude": [
 		"node_modules",
 		"build"
-	]
+	],
+	
 }

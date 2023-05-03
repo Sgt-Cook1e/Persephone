@@ -1,6 +1,6 @@
 import { AnyTextChannelWithoutGroup, ApplicationCommandOptionTypes, ApplicationCommandTypes, CommandInteraction, Uncached,  } from "oceanic.js";
 import { Command } from "../../structs/command";
-import { Kore } from "structs/Kore";
+import { Kore } from "../../structs/Kore";
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 

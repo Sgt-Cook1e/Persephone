@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
 import { AnyTextChannelWithoutGroup, ApplicationCommandOptionTypes, ApplicationCommandTypes, CommandInteraction, Uncached,  } from "oceanic.js";
 import { Command } from "../../structs/command";
-import { Kore } from "structs/Kore";
+import { Kore } from "../../structs/Kore";
 
 export default class UpdateCommand extends Command {
     constructor(client: Kore) {

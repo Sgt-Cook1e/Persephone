@@ -1,4 +1,4 @@
-import { Kore } from "structs/Kore";
+import { Kore } from "../../structs/Kore";
 import { Command } from "../../structs/command";
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCommandTypes } from "oceanic.js";
 
