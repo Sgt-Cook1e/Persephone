@@ -1,6 +1,7 @@
 import { AnyTextChannelWithoutGroup, Message, Uncached } from "oceanic.js";
 import fetch from "node-fetch";
 import { DGuild } from "../entity/guild";
+import { Tickets } from "../entity/ticket";
 import Listener  from "../structs/listener";
 import Database from "../structs/database";
 
@@ -37,30 +38,51 @@ export default new Listener("messageCreate", false, async function(msg: Message<
             });
 
             if(guilddb === null) return;
-            
-            if(msg.channelID === guilddb.gptChannel){
-                const completion = await openai.createCompletion({
-                    model: "text-davinci-003",
-                    prompt: `${msg.content}`,
-                    temperature: 0,
-                    top_p: 1,
-                    frequency_penalty: 0.0,
-                    presence_penalty: 0.0
-                });
 
-                let res = await completion.data.choices[0].text
+            if(msg.channelID === '1099023027825549313'){
+                await msg
 
-                if(res){
-                    this.rest.channels.createMessage(guilddb.gptChannel, {
-                        content: res
+                setTimeout(function() {
+                    msg.delete()
+                }, 5000);
+            }  else {
+                if(msg.channelID === guilddb.gptChannel){
+                    const completion = await openai.createCompletion({
+                        model: "text-davinci-003",
+                        prompt: `Your a chatbot, your job is to respond to a user that is chatting to you, respond humanlike to the best of your abilities.
+                        USER: ${msg.content}`,
+                        temperature: 0,
+                        top_p: 1,
+                        frequency_penalty: 0.0,
+                        presence_penalty: 0.0
                     });
+    
+                    let res = await completion.data.choices
+    
+                    if(res[0]){
+                        this.rest.channels.createMessage(guilddb.gptChannel, {
+                            content: res[0].text
+                        });
+                    } else {
+                        this.rest.channels.createMessage(guilddb.gptChannel, {
+                            content: `ChatGPT Api Broke. Pleas try Again Later.`
+                        });
+                    }
                 } else {
-                    this.rest.channels.createMessage(guilddb.gptChannel, {
-                        content: `ChatGPT Api Broke. Pleas try Again Later.`
+                    var tickets = await manager.findOne(Tickets, {
+                        where: {
+                            GuildID: GuildId
+                        }
                     });
+
+
+                    if(tickets === null) return;
+
+
+                    if(tickets.Channel){
+                        
+                    }
                 }
-            } else {
-                return;
             }
         }
     }

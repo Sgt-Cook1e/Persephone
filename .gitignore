@@ -9,3 +9,4 @@ temp/
 .yarnrc.yml
 *.sqlite
 yarn.lock
+secure-connect-kore.zip

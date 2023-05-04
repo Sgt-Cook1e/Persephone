@@ -30,46 +30,51 @@ export default class SreportCommand extends Command {
         const rchannel = interaction.data.options.getChannel("channel");
 
         if(interaction.guild?.id){
-            if(await manager.findOne(DGuild, {
-                where: {
-                    GuildID: interaction.guild.id
-                }
-            }) === null) {
-                manager.save(DGuild, { 
-                    GuildID: interaction.guild.id
-                });
-            } else {
-                var guilddb = await manager.findOne(DGuild, {
+            if(interaction.member?.permissions.has("ADMINISTRATOR")){
+                if(await manager.findOne(DGuild, {
                     where: {
                         GuildID: interaction.guild.id
                     }
+                }) === null) {
+                    manager.save(DGuild, { 
+                        GuildID: interaction.guild.id
+                    });
+                } else {
+                    var guilddb = await manager.findOne(DGuild, {
+                        where: {
+                            GuildID: interaction.guild.id
+                        }
+                    });
+    
+                    if(guilddb === null) return;
+    
+                    if(rchannel){
+                        guilddb.rchannel = rchannel.id;
+    
+                        interaction.createMessage({
+                            embeds: [
+                                {
+                                    author: {
+                                        name: interaction.guild.name
+                                    },
+    
+                                    fields: [
+                                        {
+                                            name: 'Set Reports Channel to',
+                                            value: `<#${rchannel.id}>`
+                                        }
+                                    ]
+                                }
+                            ]
+                        })
+    
+                        manager.save(DGuild, guilddb)
+                    }
+                }
+            } else {
+                interaction.createMessage({
+                    content: `You need Administrator permissions to set this up.`
                 });
-
-                if(guilddb === null) return;
-
-                if(rchannel){
-                    guilddb.rchannel = rchannel.id;
-
-                    interaction.createMessage({
-                        embeds: [
-                            {
-                                author: {
-                                    name: interaction.guild.name
-                                },
-
-                                fields: [
-                                    {
-                                        name: 'Set Reports Channel to',
-                                        value: `<#${rchannel.id}>`
-                                    }
-                                ]
-                            }
-                        ]
-                    })
-
-                    manager.save(DGuild, guilddb)
-                }   
-
             }
         }
     }

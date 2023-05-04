@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { DGuild } from "./entity/guild";
+import { Tickets } from "./entity/ticket";
 
 export const AppDataSource = new DataSource({
     type: "mongodb",
@@ -8,7 +9,7 @@ export const AppDataSource = new DataSource({
     database: "Dataclear",
     synchronize: true,
     logging: false,
-    entities: [DGuild],
+    entities: [DGuild, Tickets],
     migrations: [],
     subscribers: [],
     useUnifiedTopology: true,

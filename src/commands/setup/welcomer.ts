@@ -42,65 +42,69 @@ export default class WelcomerCommand extends Command {
         const wimg = interaction.data.options.getString("image");
 
         if(interaction.guild?.id){
-            if(await manager.findOne(DGuild, {
-                where: {
-                    GuildID: interaction.guild.id
-                }
-            }) === null) {
-                manager.save(DGuild, { 
-                    GuildID: interaction.guild.id
-                });
-            } else {
-                var guilddb = await manager.findOne(DGuild, {
+            if(interaction.member?.permissions.has("ADMINISTRATOR")){
+                if(await manager.findOne(DGuild, {
                     where: {
                         GuildID: interaction.guild.id
                     }
-                });
-
-                if(guilddb === null) return;
-
-                if(wchannel){
-                    if(wmessage){
-                        if(wimg){
-                            guilddb.wchannel = wchannel.id;
-                            guilddb.wimg = wimg;
-                            guilddb.wmessage = wmessage;
-
-                            interaction.createMessage({
-                                embeds: [
-                                    {
-                                        author: {
-                                            name: interaction.guild.name,
-                                        },
-
-                                        fields: [
-                                            {
-                                                name: `Welcome channel set to`,
-                                                value: `${wchannel}`
+                }) === null) {
+                    manager.save(DGuild, { 
+                        GuildID: interaction.guild.id
+                    });
+                } else {
+                    var guilddb = await manager.findOne(DGuild, {
+                        where: {
+                            GuildID: interaction.guild.id
+                        }
+                    });
+    
+                    if(guilddb === null) return;
+    
+                    if(wchannel){
+                        if(wmessage){
+                            if(wimg){
+                                guilddb.wchannel = wchannel.id;
+                                guilddb.wimg = wimg;
+                                guilddb.wmessage = wmessage;
+    
+                                interaction.createMessage({
+                                    embeds: [
+                                        {
+                                            author: {
+                                                name: interaction.guild.name,
                                             },
-                                            {
-                                                name: `Welcome Message set to`,
-                                                value: `${wmessage}`
-                                            },
-                                            {
-                                                name: `Welcome Image set to`,
-                                                value: `Url: ${wimg}`
+    
+                                            fields: [
+                                                {
+                                                    name: `Welcome channel set to`,
+                                                    value: `${wchannel}`
+                                                },
+                                                {
+                                                    name: `Welcome Message set to`,
+                                                    value: `${wmessage}`
+                                                },
+                                                {
+                                                    name: `Welcome Image set to`,
+                                                    value: `Url: ${wimg}`
+                                                }
+                                            ],
+    
+                                            footer: {
+                                                text: 'Created With Love by Mythic'
                                             }
-                                        ],
-
-                                        footer: {
-                                            text: 'Created With Love by Mythic'
                                         }
-                                    }
-                                ]
-                            });
-
-                            manager.save(DGuild, guilddb)
+                                    ]
+                                });
+    
+                                manager.save(DGuild, guilddb)
+                            }
                         }
                     }
                 }
-
-
+            } else {
+                interaction.createMessage({
+                    content: `You need Administrator permissions to set this up.`
+                });
             }
         }
     }
