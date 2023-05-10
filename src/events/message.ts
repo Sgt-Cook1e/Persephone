@@ -1,7 +1,6 @@
 import { AnyTextChannelWithoutGroup, Message, Uncached } from "oceanic.js";
 import fetch from "node-fetch";
 import { DGuild } from "../entity/guild";
-import { Tickets } from "../entity/ticket";
 import Listener  from "../structs/listener";
 import Database from "../structs/database";
 
@@ -69,19 +68,7 @@ export default new Listener("messageCreate", false, async function(msg: Message<
                         });
                     }
                 } else {
-                    var tickets = await manager.findOne(Tickets, {
-                        where: {
-                            GuildID: GuildId
-                        }
-                    });
-
-
-                    if(tickets === null) return;
-
-
-                    if(tickets.Channel){
-                        
-                    }
+                    // Continue to add Tickets Handler
                 }
             }
         }

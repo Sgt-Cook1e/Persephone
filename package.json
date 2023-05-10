@@ -19,6 +19,7 @@
       "glob": "^9.3.2",
       "kawaii-api": "^1.1.1",
       "mongodb": "^3.7.3",
+      "night-api": "^1.3.0",
       "node-fetch": "^3.3.1",
       "nodemon": "^2.0.22",
       "oceanic.js": "^1.5.1",

@@ -20,8 +20,14 @@ export class DGuild {
 
     @Column()
     rchannel: string
+    
+    @Column()
+    cchannel: string
 
     @Column()
     gptChannel: string
+
+    @Column()
+    formApi: string
 
 }

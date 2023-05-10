@@ -7,8 +7,8 @@ import { DGuild } from "../../entity/guild";
 export default class SreportCommand extends Command {
     constructor(client: Kore) {
         super(client, {
-            name: "sreport",
-            description: "setup report system",
+            name: "sconfess",
+            description: "setup confess system",
             group: "setup",
             slash: {
                 enabled: true,
@@ -16,7 +16,7 @@ export default class SreportCommand extends Command {
                 options: [
                     {
                         name: "channel",
-                        description: "sets the reports channel",
+                        description: "sets the confess channel",
                         type: ApplicationCommandOptionTypes.CHANNEL
                     }
                 ]
@@ -27,7 +27,7 @@ export default class SreportCommand extends Command {
     public async interactionRun(interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>): Promise<void> {
         const manager = await Database.getInstance().getManager()
 
-        const rchannel = interaction.data.options.getChannel("channel");
+        const channel = interaction.data.options.getChannel("channel");
 
         if(interaction.guild?.id){
             if(interaction.member?.permissions.has("ADMINISTRATOR")){
@@ -48,8 +48,8 @@ export default class SreportCommand extends Command {
     
                     if(guilddb === null) return;
     
-                    if(rchannel){
-                        guilddb.rchannel = rchannel.id;
+                    if(channel){
+                        guilddb.cchannel = channel.id
     
                         interaction.createMessage({
                             embeds: [
@@ -60,8 +60,8 @@ export default class SreportCommand extends Command {
     
                                     fields: [
                                         {
-                                            name: 'Set Reports Channel to',
-                                            value: `<#${rchannel.id}>`
+                                            name: 'Set Confess Channel to',
+                                            value: `<#${channel.id}>`
                                         }
                                     ]
                                 }

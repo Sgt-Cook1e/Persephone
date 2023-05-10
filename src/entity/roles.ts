@@ -1,7 +1,7 @@
 import { Entity, ObjectIdColumn, ObjectID, Column } from "typeorm"
 
 @Entity()
-export class Tickets {
+export class DGuild {
 
     @ObjectIdColumn()
     id: ObjectID
@@ -10,12 +10,9 @@ export class Tickets {
     GuildID: string
 
     @Column()
-    Channel: string
+    Group : string
 
     @Column()
-    Category: string
-
-    @Column()
-    Ticket: string
+    Roles: JSON
 
 }

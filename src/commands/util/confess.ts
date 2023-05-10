@@ -1,23 +1,24 @@
 import { Kore } from "../../structs/Kore";
 import { Command } from "../../structs/command";
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCommandTypes, ApplicationCommandOptionTypes } from "oceanic.js";
+
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 
-export default class SreportCommand extends Command {
+export default class PingCommand extends Command {
     constructor(client: Kore) {
         super(client, {
-            name: "sreport",
-            description: "setup report system",
-            group: "setup",
+            name: "confess",
+            description: "confess annomously",
+            group: "util",
             slash: {
                 enabled: true,
                 type: ApplicationCommandTypes.CHAT_INPUT,
                 options: [
                     {
-                        name: "channel",
-                        description: "sets the reports channel",
-                        type: ApplicationCommandOptionTypes.CHANNEL
+                        name: `confession`,
+                        description: `write an annomous confession`,
+                        type: ApplicationCommandOptionTypes.STRING
                     }
                 ]
             }
@@ -27,7 +28,7 @@ export default class SreportCommand extends Command {
     public async interactionRun(interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>): Promise<void> {
         const manager = await Database.getInstance().getManager()
 
-        const rchannel = interaction.data.options.getChannel("channel");
+        const confession = interaction.data.options.getString('confession');
 
         if(interaction.guild?.id){
             if(interaction.member?.permissions.has("ADMINISTRATOR")){
@@ -47,34 +48,34 @@ export default class SreportCommand extends Command {
                     });
     
                     if(guilddb === null) return;
-    
-                    if(rchannel){
-                        guilddb.rchannel = rchannel.id;
-    
+
+                    if(guilddb.cchannel === null){
                         interaction.createMessage({
+                            content: `Please as a Administrator to setup the confessions. with /sconfess`
+                        });
+
+                        return;
+                    }
+
+                    if(confession){
+                        await this.client.rest.channels.createMessage(guilddb.cchannel, {
                             embeds: [
                                 {
-                                    author: {
-                                        name: interaction.guild.name
-                                    },
-    
                                     fields: [
                                         {
-                                            name: 'Set Reports Channel to',
-                                            value: `<#${rchannel.id}>`
+                                            name: `Annomous Confession`,
+                                            value: `${confession}`
                                         }
-                                    ]
+                                    ],
+
+                                    footer: {
+                                        text: `Created with Love by MythicXGN`
+                                    }
                                 }
                             ]
-                        })
-    
-                        manager.save(DGuild, guilddb)
+                        });
                     }
                 }
-            } else {
-                interaction.createMessage({
-                    content: `You need Administrator permissions to set this up.`
-                });
             }
         }
     }
