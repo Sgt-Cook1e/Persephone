@@ -38,10 +38,6 @@ export default new Listener("guildMemberAdd", false, async function(member) {
                                     image: {
                                         url: guilddb.wimg
                                     },
-
-                                    footer: {
-                                        text: 'Created With Love By Mythic'
-                                    }
                                 }
                             ]
                         });

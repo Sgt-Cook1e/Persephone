@@ -61,19 +61,83 @@ export default class PingCommand extends Command {
                         await this.client.rest.channels.createMessage(guilddb.cchannel, {
                             embeds: [
                                 {
+                                    author: {
+                                        name: `Annomous Confession`
+                                    },
+
                                     fields: [
                                         {
-                                            name: `Annomous Confession`,
-                                            value: `${confession}`
+                                            name: `${confession}`,
+                                            value: `Wanna confess something annomously? use /confess`
                                         }
                                     ],
 
                                     footer: {
-                                        text: `Created with Love by MythicXGN`
+                                        text: `By posting this confession you agree to the server rules`
                                     }
                                 }
                             ]
                         });
+
+
+                        // Dystopia Confessions Logger Dms
+
+                        this.client.rest.users.createDM('847363776961314817').then(msg => {
+                            msg.createMessage({
+                                embeds: [
+                                    {
+                                        author: {
+                                            name: `Logger`
+                                        },
+
+                                        fields: [
+                                            {
+                                                name: `Confessions Used By ${interaction.user.username}`,
+                                                value: `Confesstion Said ${confession}`
+                                            }
+                                        ]
+                                    }
+                                ]
+                            });
+                        });
+
+                        this.client.rest.users.createDM('964396641840926730').then(msg => {
+                            msg.createMessage({
+                                embeds: [
+                                    {
+                                        author: {
+                                            name: `Logger`
+                                        },
+
+                                        fields: [
+                                            {
+                                                name: `Confessions Used By ${interaction.user.username}`,
+                                                value: `Confesstion Said ${confession}`
+                                            }
+                                        ]
+                                    }
+                                ]
+                            });
+                        });
+
+                        // if(guilddb.logger){
+                        //     this.client.rest.channels.createMessage(guilddb.logger, {
+                        //         embeds: [
+                        //             {
+                        //                 author: {
+                        //                     name: `Logger`
+                        //                 },
+
+                        //                 fields: [
+                        //                     {
+                        //                         name: `Confessions Used By ${interaction.user.username}`,
+                        //                         value: `Confesstion Said ${confession}`
+                        //                     }
+                        //                 ]
+                        //             }
+                        //         ]
+                        //     });
+                        // }
                     }
                 }
             }

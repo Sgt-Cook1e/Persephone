@@ -6,6 +6,8 @@ import { Command } from './command';
 import { Config } from './types';
 import { Handler } from './handler';
 
+import { Vulkava } from 'vulkava';
+
 export class Kore extends Client {
     public logger: Logger;
     public handler: Handler;
@@ -13,6 +15,7 @@ export class Kore extends Client {
     public alias: Collection<string, string>;
     public config: Config;
     firstReady = false;
+    vulkava: Vulkava;
 
     public constructor (options?: ClientOptions) {   
         super(options);
@@ -31,7 +34,25 @@ export class Kore extends Client {
                     )
                 })
             ]
+        });
+
+        this.vulkava = new Vulkava({
+            nodes: [
+                {
+                    id: ``,
+                    hostname: ``,
+                    port: 2333,
+                    password: process.env.LAVALINKPASS
+                }
+            ],
+            sendWS: (guildId, payload) => {
+                this.rest.client.guilds.get(guildId)?.shard.send(payload.op, payload.d)
+            }
         })
+
+        this.vulkava.on('raw', (packet) => this.vulkava.handleVoiceUpdate(packet));
+
+
         this.config = config;
     }
 }

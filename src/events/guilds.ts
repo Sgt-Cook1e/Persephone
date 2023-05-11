@@ -46,11 +46,6 @@ export default new Listener("guildCreate", false, async function(guild) {
                                             value: `https://mythicxgn.com`,
                                         }
                                     ],
-
-                                    
-                                    footer: {
-                                        text: 'Created With Love By Mythic'
-                                    }
                                 }
                             ]
                         });

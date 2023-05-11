@@ -88,10 +88,6 @@ export default class WelcomerCommand extends Command {
                                                     value: `Url: ${wimg}`
                                                 }
                                             ],
-    
-                                            footer: {
-                                                text: 'Created With Love by Mythic'
-                                            }
                                         }
                                     ]
                                 });

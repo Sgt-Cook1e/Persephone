@@ -1,3 +1,4 @@
+import { Collection } from "oceanic.js"
 import { Entity, ObjectIdColumn, ObjectID, Column } from "typeorm"
 
 @Entity()
@@ -29,5 +30,8 @@ export class DGuild {
 
     @Column()
     formApi: string
+
+    @Column()
+    logger: string
 
 }

@@ -6,10 +6,10 @@ export default new Listener("messageReactionRemove", false, async function(messa
     if(message.guild?.id === null) return;
     if(reaction === null) return;
 
-    this.logger.warn(`
-    Reaction Removed
-    Reaction Name: ${reaction.name}
-    Reaction ID: ${reaction.id}
-    Message ID: ${message.id}
-    Guild ID: ${message.guild?.id}`);
+    // this.logger.warn(`
+    // Reaction Removed
+    // Reaction Name: ${reaction.name}
+    // Reaction ID: ${reaction.id}
+    // Message ID: ${message.id}
+    // Guild ID: ${message.guild?.id}`);
 });
