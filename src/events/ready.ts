@@ -4,6 +4,7 @@ import Listener  from "../structs/listener";
 export default new Listener("ready", false, async function() {
     if (this.firstReady === true) return this.logger.warn("Ready event called after first ready, ignoring.");
     this.firstReady = true;
+    this.vulkava.start(this.user.id)
     this.logger.info(`Launched as ${this.user.username}`);
 
     this.editStatus('idle', [{name: `Protecting ${this.rest.client.guilds.size} Guild`, type: Constants.ActivityTypes.GAME}]);
