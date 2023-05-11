@@ -20,12 +20,7 @@ export default class PingCommand extends Command {
                         description: "song name",
                         type: ApplicationCommandOptionTypes.STRING,
                         required: true
-                    },
-                    {
-                        name: `url`,
-                        description: `url for a song`,
-                        type: ApplicationCommandOptionTypes.STRING
-                    },
+                    }
                 ]
             }
         });
