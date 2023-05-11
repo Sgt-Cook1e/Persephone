@@ -39,9 +39,9 @@ export class Kore extends Client {
         this.vulkava = new Vulkava({
             nodes: [
                 {
-                    id: `boobs`,
+                    id: `Kore`,
                     hostname: process.env.LAVALINKHOST!,
-                    port: 25569,
+                    port: 25558,
                     password: process.env.LAVALINKPASS
                 }
             ],
@@ -53,27 +53,20 @@ export class Kore extends Client {
         this.vulkava.on('trackStart', (player, track) => {
             const channel = this.getChannel(player.textChannelId!)!;
             
-            console.log(`Now playing \`${track.title}\``)
+            this.logger.info(`[Vulkava] Now playing: ${track.title}`)
             this.channelGuildMap
-            // channel.(`Now playing \`${track.title}\``);
         });
         
-        // Fired when the queue ends
         this.vulkava.on('queueEnd', (player) => {
-            const channel = this.getChannel(player.textChannelId!)!;
-            
-            console.log('queue ended!')
-            // channel.send(`Queue ended!`);
-            
             player.destroy();
         });
         
-        // This event is needed to catch any errors that occur on Vulkava
         this.vulkava.on('error', (node, err) => {
-            console.error(`[Vulkava] Error on node ${node.identifier}`, err.message);
+            this.logger.error(`[Vulkava] Error on node ${node.identifier}`, err.message)
         });
+
         this.vulkava.on('debug', (message) => {
-            console.error(`[Vulkava] debug ${message}`);
+            this.logger.debug(`[Vulkava] debug ${message}`)
         });
         
 

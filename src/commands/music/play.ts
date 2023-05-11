@@ -2,10 +2,7 @@ import { Kore } from "../../structs/Kore";
 import { Command } from "../../structs/command";
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCommandTypes, ApplicationCommandOptionTypes } from "oceanic.js";
 
-import * as dotenv from 'dotenv';
-dotenv.config();
-
-export default class PingCommand extends Command {
+export default class PlayCommand extends Command {
     constructor(client: Kore) {
         super(client, {
             name: "play",
@@ -41,15 +38,14 @@ export default class PingCommand extends Command {
             })
         }
         
-        // Creates the audio player
         const player = this.client.vulkava.createPlayer({
             guildId: interaction.guild?.id!,
             voiceChannelId: interaction.member?.voiceState?.channelID!,
             textChannelId: interaction.channel?.id,
-            selfDeaf: true
+            selfDeaf: true,
         });
         
-        player.connect(); // Connects to the voice channel
+        player.connect();
         
         if (res.loadType === 'PLAYLIST_LOADED') {
             for (const track of res.tracks) {
@@ -58,17 +54,50 @@ export default class PingCommand extends Command {
             }
             
             interaction.createMessage({
-                content: `Playlist \`${res.playlistInfo.name}\` loaded!`
+                embeds: [
+                    {
+                        author: {
+                            name: `${res.playlistInfo.name} playlist added to queue by ${interaction.user.username}`,
+                            iconURL: interaction.user.avatarURL('jpg')
+                        },
+
+                        fields: [
+                            {
+                                name: `${res.tracks}`,
+                                value: ``
+                            }
+                        ]
+
+                    }
+                ]
             });
         } else {
             const track = res.tracks[0];
             track.setRequester(interaction.user);
             
             player.queue.add(track);
+
+            var ms = track.duration
+            var min = Math.floor((ms/1000/60) << 0)
+            var sec = Math.floor((ms/1000) % 60);
+
             interaction.createMessage({
-                content: `Queued \`${track.title}\``
+                embeds: [
+                    {
+                        author: {
+                            name: `${interaction.user.username} Added To Queue`,
+                            iconURL: interaction.user.avatarURL('jpg')
+                        },
+
+                        fields: [
+                            {
+                                name: `${track.title}: By ${track.author}`,
+                                value: `${min}:${sec}`
+                            }
+                        ]
+                    }
+                ]
             });
-    
         }
         
         if (!player.playing) player.play();
