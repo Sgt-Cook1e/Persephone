@@ -63,7 +63,7 @@ export default class PlayCommand extends Command {
 
                         fields: [
                             {
-                                name: `${res.tracks}`,
+                                name: ``,
                                 value: ``
                             }
                         ]
