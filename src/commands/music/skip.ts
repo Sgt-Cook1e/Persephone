@@ -57,7 +57,7 @@ export default class SkipCommand extends Command {
                             ]
                         }
                     ]
-                })
+                });
             }
         }
     }
