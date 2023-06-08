@@ -1,4 +1,3 @@
-import { Collection } from "oceanic.js"
 import { Entity, ObjectIdColumn, ObjectID, Column } from "typeorm"
 
 @Entity()
@@ -14,24 +13,23 @@ export class DGuild {
     wchannel: string
 
     @Column()
-    wmessage: string
-
-    @Column()
     wimg: string
 
     @Column()
-    rchannel: string
-    
-    @Column()
-    cchannel: string
+    wmessage: string
 
     @Column()
-    gptChannel: string
+    confessChannel: string
 
     @Column()
-    formApi: string
+    confessLogger: string
 
     @Column()
-    logger: string
+    memberCount: string
 
+    @Column()
+    botsCount: string
+
+    @Column()
+    onlineCount: string
 }

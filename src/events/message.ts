@@ -1,26 +1,20 @@
-import { AnyTextChannelWithoutGroup, Message, Uncached } from "oceanic.js";
-import fetch from "node-fetch";
-import { DGuild } from "../entity/guild";
 import Listener  from "../structs/listener";
+import { AnyTextChannelWithoutGroup, Message, Uncached } from "oceanic.js";
 import Database from "../structs/database";
-
-import { OpenAIApi, Configuration } from "openai";
-
-export const openai = new OpenAIApi(new Configuration({ apiKey: process.env.CHATGPT }));
+import { DGuild } from "../entity/guild";
 
 export default new Listener("messageCreate", false, async function(msg: Message<Uncached | AnyTextChannelWithoutGroup>) {
-    if (msg.author.bot) return;
-    let GuildId, Member;
-    const manager = await Database.getInstance().getManager()
-    
+    let GuildId;
+
     if (msg.member) {
         GuildId = msg.member.guildID
-        Member = msg.member.id
     } else {
         return;
     }
 
-    if(msg.member.guild.id){
+    const manager = await Database.getInstance().getManager()
+
+    if(GuildId){
         if(await manager.findOne(DGuild, {
             where: {
                 GuildID: GuildId
@@ -35,41 +29,24 @@ export default new Listener("messageCreate", false, async function(msg: Message<
                     GuildID: GuildId
                 }
             });
+            
+            if(guilddb === null || undefined) return;
 
-            if(guilddb === null) return;
+            const list = this.rest.client.guilds.get(GuildId)
 
-            if(msg.channelID === '1099023027825549313'){
-                await msg
+            if(guilddb.onlineCount){
+                let channel = guilddb.onlineCount;
+                const online = list?.members.filter(member => member.presence?.status === "online").length;
+                const idle = list?.members.filter(member => member.presence?.status === "idle").length;
+                const dnd = list?.members.filter(member => member.presence?.status === "dnd").length;
 
-                setTimeout(function() {
-                    msg.delete()
-                }, 5000);
-            }  else {
-                if(msg.channelID === guilddb.gptChannel){
-                    const completion = await openai.createCompletion({
-                        model: "text-davinci-003",
-                        prompt: `Your a chatbot, your job is to respond to a user that is chatting to you, respond humanlike to the best of your abilities.
-                        USER: ${msg.content}`,
-                        temperature: 0,
-                        top_p: 1,
-                        frequency_penalty: 0.0,
-                        presence_penalty: 0.0
-                    });
-    
-                    let res = await completion.data.choices
-    
-                    if(res[0]){
-                        this.rest.channels.createMessage(guilddb.gptChannel, {
-                            content: res[0].text
-                        });
-                    } else {
-                        this.rest.channels.createMessage(guilddb.gptChannel, {
-                            content: `ChatGPT Api Broke. Pleas try Again Later.`
-                        });
-                    }
-                } else {
-                    // Continue to add Tickets Handler
-                }
+                if(online === undefined) return;
+                if(idle === undefined) return;
+                if(dnd === undefined) return;
+
+                this.rest.channels.edit(channel, {
+                    name: `🟢 𝓞𝓷𝓵𝓲𝓷𝓮: ${online + idle + dnd}`
+                });
             }
         }
     }

@@ -2,6 +2,10 @@ import Listener  from "../structs/listener";
 import Database from "../structs/database";
 import { DGuild } from "../entity/guild";
 
+import { Kawaii } from "kawaii-api";
+import * as dotenv from 'dotenv';
+dotenv.config()
+
 export default new Listener("guildMemberAdd", false, async function(member) {
     const manager = await Database.getInstance().getManager()
     
@@ -21,11 +25,31 @@ export default new Listener("guildMemberAdd", false, async function(member) {
                 }
             });
             
-            if(guilddb === null) return;
+            if(guilddb === null || undefined) return;
 
-            if(guilddb.wchannel){
-                if(guilddb.wmessage){
-                    if(guilddb.wimg){
+            const list = this.rest.client.guilds.get(member.guild.id)
+
+            if(guilddb.memberCount){
+                let channel = guilddb.memberCount;
+                const users = list?.memberCount
+
+                this.rest.channels.edit(channel, {
+                    name: `🫂 𝓜𝓮𝓶𝓫𝓮𝓻𝓼: ${users}`
+                });
+            }
+
+            if(guilddb.botsCount){
+                let channel = guilddb.botsCount;
+                const bots = list?.members.filter(members => members.bot).length;
+
+                this.rest.channels.edit(channel, {
+                    name: `🤖 𝓑𝓸𝓽𝓼: ${bots}`
+                });
+            }
+            
+            if(guilddb.wimg){
+                if(guilddb.wchannel){
+                    if(guilddb.wmessage){
                         this.rest.channels.createMessage(guilddb.wchannel, {
                             content: `${member.mention}, ${guilddb.wmessage}`,
                             embeds: [
@@ -37,11 +61,33 @@ export default new Listener("guildMemberAdd", false, async function(member) {
 
                                     image: {
                                         url: guilddb.wimg
-                                    },
+                                    }
                                 }
                             ]
                         });
+                    }
+                }
+            } else {
+                if(guilddb.wchannel){
+                    if(guilddb.wmessage){
+                        const api = new Kawaii(`${process.env.KAWAIITOKEN}`);
+                        const data = await api.get("gif", "wave");
 
+                        this.rest.channels.createMessage(guilddb.wchannel, {
+                            content: `${member.mention}, ${guilddb.wmessage}`,
+                            embeds: [
+                                {
+                                    author: {
+                                        name: member.username,
+                                        iconURL: member.avatarURL('jpeg')
+                                    },
+
+                                    image: {
+                                        url: data
+                                    }
+                                }
+                            ]
+                        });
                     }
                 }
             }

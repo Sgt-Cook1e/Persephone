@@ -7,7 +7,7 @@ export default new Listener("ready", false, async function() {
     this.vulkava.start(this.user.id)
     this.logger.info(`Launched as ${this.user.username}`);
 
-    this.editStatus('idle', [{name: `Protecting ${this.rest.client.guilds.size} Guilds`, type: Constants.ActivityTypes.GAME}]);
+    this.editStatus('idle', [{name: `Running ServerStats.exe`, type: Constants.ActivityTypes.GAME}]);
 
         // const commands = this.application.getGlobalCommands();
 

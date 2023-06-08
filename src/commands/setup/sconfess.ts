@@ -1,14 +1,14 @@
-import { Kore } from "../../structs/Kore";
+import { Kore } from "structs/Kore";
 import { Command } from "../../structs/command";
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCommandTypes, ApplicationCommandOptionTypes } from "oceanic.js";
 import Database from "../../structs/database";
 import { DGuild } from "../../entity/guild";
 
-export default class SreportCommand extends Command {
+export default class ConfessSetupCommand extends Command {
     constructor(client: Kore) {
         super(client, {
             name: "sconfess",
-            description: "setup confess system",
+            description: "setup for the confess feature",
             group: "setup",
             slash: {
                 enabled: true,
@@ -16,7 +16,20 @@ export default class SreportCommand extends Command {
                 options: [
                     {
                         name: "channel",
-                        description: "sets the confess channel",
+                        description: "channel for confessions to post into",
+                        required: true,
+                        type: ApplicationCommandOptionTypes.CHANNEL
+                    },
+                    {
+                        name: "logger",
+                        description: "would you like to log the confessions?",
+                        required: false,
+                        type: ApplicationCommandOptionTypes.BOOLEAN
+                    },
+                    {
+                        name: "logchannel",
+                        description: "channel to log if boolean was set to true",
+                        required: false,
                         type: ApplicationCommandOptionTypes.CHANNEL
                     }
                 ]
@@ -28,6 +41,8 @@ export default class SreportCommand extends Command {
         const manager = await Database.getInstance().getManager()
 
         const channel = interaction.data.options.getChannel("channel");
+        const logger = interaction.data.options.getBoolean("logger");
+        const logchannel = interaction.data.options.getChannel("logchannel");
 
         if(interaction.guild?.id){
             if(interaction.member?.permissions.has("ADMINISTRATOR")){
@@ -40,40 +55,74 @@ export default class SreportCommand extends Command {
                         GuildID: interaction.guild.id
                     });
                 } else {
-                    var guilddb = await manager.findOne(DGuild, {
+                    const guilddb = await manager.findOne(DGuild, {
                         where: {
                             GuildID: interaction.guild.id
                         }
                     });
-    
-                    if(guilddb === null) return;
-    
+
+                    if(guilddb === null || undefined) return;
+
                     if(channel){
-                        guilddb.cchannel = channel.id
+                        if(logger === true){
+                            if(logchannel){
+                                guilddb.confessLogger = logchannel.id;
+                                guilddb.confessChannel = channel?.id;
     
-                        interaction.createMessage({
-                            embeds: [
-                                {
-                                    author: {
-                                        name: interaction.guild.name
-                                    },
-    
-                                    fields: [
+                                interaction.createMessage({
+                                    embeds: [
                                         {
-                                            name: 'Set Confess Channel to',
-                                            value: `<#${channel.id}>`
+                                            author: {
+                                                name: interaction.guild.name
+                                            },
+                                            
+                                            fields: [
+                                                {
+                                                    name: `Logger Set To`,
+                                                    value: `${logchannel.mention}`
+                                                },
+                                                {
+                                                    name: `Confess Channel Set To`,
+                                                    value: `${channel.mention}`
+                                                }
+                                            ]
                                         }
                                     ]
-                                }
-                            ]
-                        })
+                                });
     
-                        manager.save(DGuild, guilddb)
+                                manager.save(DGuild, guilddb);
+                            } else {
+                                interaction.createMessage({
+                                    content: "Please Define a log channel"
+                                });
+                            }
+                        } else {
+                            guilddb.confessChannel = channel.id;
+
+                            interaction.createMessage({
+                                embeds: [
+                                    {
+                                        author: {
+                                            name: interaction.guild.name
+                                        },
+
+                                        fields: [
+                                            {
+                                                name: `Confess Channel Set To`,
+                                                value: `${channel.mention}`
+                                            }
+                                        ]
+                                    }
+                                ]
+                            });
+
+                            manager.save(DGuild, guilddb);
+                        }
                     }
                 }
             } else {
                 interaction.createMessage({
-                    content: `You need Administrator permissions to set this up.`
+                    content: `You need Administrator permissions to set up the confessions system`
                 });
             }
         }
