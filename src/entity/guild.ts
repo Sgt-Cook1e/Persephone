@@ -32,4 +32,13 @@ export class DGuild {
 
     @Column()
     onlineCount: string
+
+    @Column()
+    lmsg: string
+
+    @Column()
+    lchannel: string
+
+    @Column()
+    bdaychannel: string
 }

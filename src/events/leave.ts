@@ -2,7 +2,6 @@ import Listener  from "../structs/listener";
 import Database from "../structs/database";
 import { DGuild } from "../entity/guild";
 
-import { Kawaii } from "kawaii-api";
 import * as dotenv from 'dotenv';
 dotenv.config()
 
@@ -27,7 +26,28 @@ export default new Listener("guildMemberRemove", false, async function(member, g
             
             if(guilddb === null || undefined) return;
 
-            const list = this.rest.client.guilds.get(guild.id)
+            const list = this.rest.client.guilds.get(guild.id);
+
+            if(guilddb.lchannel){
+                if(guilddb.lmsg){
+                    this.rest.channels.createMessage(guilddb.lchannel, {
+                        embeds: [
+                            {
+                                author: {
+                                    name: member.username
+                                },
+    
+                                fields: [
+                                    {
+                                        name: `${guilddb.lmsg}`,
+                                        value: ``
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                }
+            }
 
             if(guilddb.memberCount){
                 let channel = guilddb.memberCount;

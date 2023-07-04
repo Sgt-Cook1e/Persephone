@@ -4,6 +4,7 @@ import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, ApplicationCo
 
 import Database from "../../structs/database";
 import { DMember } from "../../entity/user";
+import { DGuild } from "../../entity/guild";
 
 export default class BirthdayCommand extends Command {
     constructor(client: Kore) {
@@ -21,9 +22,9 @@ export default class BirthdayCommand extends Command {
                         type: ApplicationCommandOptionTypes.STRING
                     },
                     {
-                        name: "upcoming",
-                        description: "shows upcoming birthdays",
-                        type: ApplicationCommandOptionTypes.BOOLEAN
+                        name: "channel",
+                        description: "sets an announcements channel for birthdays",
+                        type: ApplicationCommandOptionTypes.CHANNEL
                     }
                 ]
             }
@@ -34,7 +35,7 @@ export default class BirthdayCommand extends Command {
         const manager = await Database.getInstance().getManager()
  
         const set = interaction.data.options.getString("set");
-        const upcoming = interaction.data.options.getBoolean("upcoming");
+        const channel = interaction.data.options.getChannel("channel");
 
         if(interaction.member?.id){
             if(await manager.findOne(DMember, {
@@ -61,39 +62,33 @@ export default class BirthdayCommand extends Command {
 
                     memberdb.Birthday = set
                     manager.save(DMember, memberdb);
-                }
-
-                if(upcoming === true){
-                    const memberBday = await manager.find(DMember);
-
-                    if(memberBday === null || undefined) return;
-
-                    memberBday.forEach(bday => {
-                        const SMonth = new Date(Date.now()).getMonth() + 1;
-                        const DMonth = bday.Birthday.split("/")[0];
-                        const user = bday.MemberID;
-
-                        if(SMonth.toString() === DMonth){
-                            this.client.rest.channels.createMessage(interaction.channelID, {
-                                embeds: [
-                                    {
-                                        author: {
-                                            name: `Birthdays`
-                                        },
-    
-                                        fields: [
-                                            {
-                                                name: ``,
-                                                value: `<@${user}>'s Birthday is ${bday.Birthday}`
-                                            }
-                                        ]
-                                    }
-                                ]
-                            })
-                        }
-                    })
                 } else {
-                    return;
+                    if(channel){
+                        if(await manager.findOne(DGuild, {
+                            where: {
+                                GuildID: interaction.guild?.id
+                            }
+                        }) === null) {
+                            manager.save(DGuild, {
+                                GuildID: interaction.guild?.id
+                            });
+                        } else {
+                            const guilddb = await manager.findOne(DGuild, {
+                                where: {
+                                    GuildID: interaction.guild?.id
+                                }
+                            });
+
+                            if(guilddb === null || undefined) return;
+
+                            interaction.createMessage({
+                                content: `Birthday Channel Set to ${channel.mention}`
+                            });
+
+                            guilddb.bdaychannel = channel.id
+                            manager.save(DGuild, guilddb);
+                        }
+                    }
                 }
             }
         }
