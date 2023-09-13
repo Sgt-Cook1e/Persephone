@@ -10,6 +10,12 @@ export class DGuild {
     GuildID: string
 
     @Column()
+    CustomCurrency: boolean
+
+    @Column()
+    CustomCurrencyName: string
+
+    @Column()
     wchannel: string
 
     @Column()
@@ -41,4 +47,10 @@ export class DGuild {
 
     @Column()
     bdaychannel: string
+
+    @Column()
+    chatgptChannel: string
+
+    @Column()
+    chatgptEnabled: boolean
 }
