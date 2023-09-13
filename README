@@ -1,3 +1,15 @@
-# Persephone EOL
+# Persephone
 
-I will no longer be updating this repo please refure to our new repo [Bubble](https://github.com/Sgt-Cook1e/Bubble)
+To install dependencies:
+
+```bash
+yarn install
+```
+
+To run:
+
+```bash
+yarn start
+```
+
+Persephone is EOL and Will No Longer Be Updated. Please refure to [Bubble](https://github.com/Sgt-Cook1e/Bubble)
